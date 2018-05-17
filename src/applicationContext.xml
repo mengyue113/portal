@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:p="http://www.springframework.org/schema/p"  
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd  ">
+	
+<!-- Bean的属性注入-->
+	<!-- 构造方法注入   需要提供带参构造-->
+    <bean name="user" class="domain.User" init-method="init" destroy-method="destroy">
+		
+		<constructor-arg name="name" value="mengyue"></constructor-arg>
+		<constructor-arg name="age" value="21"></constructor-arg>
+		<constructor-arg name="car" ref="car"></constructor-arg>
+	</bean>  
+	<!-- set方法的方式注入 需要提供无参构造-->
+	<bean name="user1" class="domain.User">
+		<property name="name" value="mengyue"></property>
+		<property name="age" value="21"></property>
+		<property name="car" ref="car"></property>
+	</bean> 
+	
+	
+	<bean name="car" class="domain.Car">
+		<property name="name" value="法拉利"></property>
+		<property name="color" value="红色"></property>
+	</bean>
+<!--打印机例子 -->
+	<bean name="colorInk" class="springPrinter.work.yuegege.ink.ColorInk" ></bean>
+	<bean name="grayInk" class="springPrinter.work.yuegege.ink.GrayInk" ></bean>
+	<bean name="paper" class="springPrinter.work.yuegege.paper.B5Paper" ></bean>
+	 <!-- 对打印机进行配置 -->
+	 <bean name="printer" class="springPrinter.work.yuegege.printer.Print">
+	 	<property name="ink" ref="grayInk"></property>
+	 	<property name="paper" ref="paper"></property>
+	 </bean>
+	 
+	 
+	 <!--  复杂注入-->
+	   
+	 <bean name="cb" class="domain.CollectionBean">
+	 <!--1.array注入  -->
+	 	<!-- <property name="arr" value="zhangsan"></property> -->
+	 	<property name="arr">
+	 		<array>
+	 		<value>zhangsan</value>
+	 		<value>21</value>
+	 		<ref bean="user1"/>
+	 		</array>
+	 	</property>
+	 	 <!--2.list注入  -->
+	 	<!--  <property name="list" value="tom"></property> -->
+	 	<property name="list">
+	 		<list>
+	 			<value>zhangsan</value>
+	 			<value>21</value>
+	 			<ref bean="user1"/>
+	 		</list>
+	 	</property>
+	 	<!--3.map注入  -->
+	 	<property name="map">
+	 		<map>
+	 			<entry key="name" value="zhangsan"></entry>
+	 			<entry key="user" value-ref="user1"></entry>
+	 		</map>
+	 	</property>
+	 	
+	 </bean>
+	 
+	 
+	 <!-- p名称空间注入 -->
+	 <bean name="user2" class="domain.User" p:name="mengyue" p:age="21" p:car-ref="car"></bean>
+	 
+	<!--spel注入 spring Expression Language spring的表达式语言  相当于 spring 的el表达式  -->
+	<!--可以取其他bean的值放于value中-->
+	<bean name="user3" class="domain.User">
+		<property name="name" value="#{user.name}"></property>
+		<property name="age" value="#{user.age}"></property>
+		<property name="car" ref="car"></property>
+	</bean>
+	 
+</beans>
